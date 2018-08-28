@@ -6,6 +6,7 @@ class Board
   def initialize(name1, name2)
     @player_1 = name1
     @player_2 = name2
+    @current_player
     @cups = Array.new(14){Array.new}
     place_stones
   end
@@ -33,6 +34,8 @@ class Board
   end
 
   def make_move(start_pos, current_player_name)
+    @current_player = current_player_name
+    i = 0
       if @player_1 == current_player_name
         i=1
         until self.cups[start_pos].empty?
@@ -44,17 +47,35 @@ class Board
           self.cups[(start_pos+i)% 14] << stone_pop
           i+=1
         end
+      else
+        i=1
+        until self.cups[start_pos].empty?
+            if (start_pos+i) % 14 == 6
+            i+=1
+              next
+            end
+          stone_pop = self.cups[start_pos].pop
+          self.cups[(start_pos+i)% 14] << stone_pop
+          i+=1
+        end
       end
       self.render
-      self.next_turn(((start_pos+i)% 14)-1)
+      self.next_turn((start_pos + i - 1) % 14)
 
     end
 
   def next_turn(ending_cup_idx)
+    if (@current_player == @player_1  && ending_cup_idx == 6)
+      return :prompt
+    end
+    if (@current_player == @player_2  && ending_cup_idx == 13)
+      return :prompt
+    end
+
+
     if self.cups[ending_cup_idx].length == 1
       return :switch
-    elsif ending_cup_idx == 6 || ending_cup_idx == 13
-      return :prompt
+
     else
     ending_cup_idx
     end
