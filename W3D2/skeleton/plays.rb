@@ -48,7 +48,7 @@ class Play
         id = ?
     SQL
   end
-end
+
 
 def self.find_by_title(title)
     play = PlayDBConnection.instance.execute(<<-SQL, title)
@@ -79,6 +79,7 @@ def self.find_by_title(title)
 
     plays.map { |play| Play.new(play) }
   end
+end
 
   class Playwright
   attr_accessor :name, :birth_year
